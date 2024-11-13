@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import "./MediaDisplay.css"
+
 
 const MediaDisplay = () => {
   const [media, setMedia] = useState([]);
@@ -17,7 +17,7 @@ const MediaDisplay = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setMedia(data); // Store media data in state
+        setMedia(data); 
       } catch (error) {
         toast.error('Error loading media');
       } finally {
@@ -36,24 +36,32 @@ const MediaDisplay = () => {
 
   // Render media files
   return (
-    <div className="media-container">
-      {media.length > 0 ? (
-        media.map((item) => (
-          <div key={item._id} className="media-item">
-            {item.type.startsWith('image') ? (
-              <img src={`http://localhost:5000${item.url}`} alt="uploaded" className="media-image" />
-            ) : (
-              <video controls className="media-video">
-                <source src={`http://localhost:5000${item.url}`} type={item.type} />
-                Your browser does not support the video tag.
-              </video>
-            )}
-          </div>
-        ))
-      ) : (
-        <p>No media uploaded yet.</p>
-      )}
-    </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 p-5">
+  {media.length > 0 ? (
+    media.map((item) => (
+      <div
+        key={item._id}
+        className="relative overflow-hidden inline-block m-2 rounded-lg transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg"
+      >
+        {item.type.startsWith('image') ? (
+          <img
+            src={`http://localhost:5000${item.url}`}
+            alt="uploaded"
+            className="w-full h-full object-cover rounded-lg transition-transform duration-300 ease-in-out transform hover:scale-110"
+          />
+        ) : (
+          <video controls className="w-full h-full rounded-lg object-cover transition-transform duration-300 ease-in-out transform hover:scale-110">
+            <source src={`http://localhost:5000${item.url}`} type={item.type} />
+            Your browser does not support the video tag.
+          </video>
+        )}
+      </div>
+    ))
+  ) : (
+    <p className="col-span-full text-center text-gray-500">No media uploaded yet.</p>
+  )}
+</div>
+
   );
 };
 
